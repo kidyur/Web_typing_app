@@ -1,0 +1,18 @@
+body {
+    color: grey;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    font-family: monospace;
+    margin: 0;
+    font-size: 32px;
+}
+
+input {
+    font-size: 32px;
+}
