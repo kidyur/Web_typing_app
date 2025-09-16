@@ -37,8 +37,11 @@ window.onload = () => {
         var newText = inputEl.value;
         var newLength = newText.length;
         var newSymbol = newText.at(-1);
-        // BACKSPACE KEY
-        if (newLength < inputLength) {
+
+        const BACKSPACE = (newLength < inputLength);
+        const KEY = (newLength > inputLength);
+
+        if (BACKSPACE) {
             var changes = inputLength - newLength;
             inputLength -= changes;
             // The cycle is way to deal with a CTRL+BACKSPACE case
@@ -47,8 +50,7 @@ window.onload = () => {
                 moveCaretTo(LEFT);
                 changes -= 1;
             }
-            // SYMBOL KEY
-        } else if (newLength > inputLength) {
+        } else if (KEY) {
             var color = "red";
             // SYMBOLS MATCHED     
             if (newSymbol == text[caret+1]) {
@@ -59,10 +61,9 @@ window.onload = () => {
             inputLength += 1;
         }
 
-        // Accepts space only if it is necessary
-        // To avoid space pressing error
         const IS_KEY_MISSED = (newSymbol == ' ' && text[caret] != ' ');
         const IS_SPACE_MISSED = (newSymbol != ' ' && text[caret] == ' ');
+        
         if (IS_KEY_MISSED || IS_SPACE_MISSED) {
             paintSymbol(caret-1, "grey");
             moveCaretTo(LEFT);
