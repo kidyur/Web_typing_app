@@ -1,6 +1,8 @@
 
 const LEFT = -1;
 const RIGHT = 1;
+const CARET_ACTIVE_STYLE = "input__caret input__caret--blinking";
+const CARET_INACTIVE_STYLE = "input__caret input__caret--hidden";
 
 
 window.onload = () => {
@@ -30,7 +32,15 @@ window.onload = () => {
         exampleEl.innerHTML = separated.join('');
     }
 
-    updateExample()
+    function setCaretStyle(styles) {
+        separated[caret] = `<span class="${styles}">|</span>`;
+        updateExample();
+    }
+
+    function resetForm() {
+        updateExample();
+        setCaretStyle(CARET_INACTIVE_STYLE);
+    }
 
     inputEl.addEventListener("input", () => {
         
@@ -74,4 +84,13 @@ window.onload = () => {
         updateExample();
     })
 
+    inputEl.addEventListener("focus", () => {
+        setCaretStyle(CARET_ACTIVE_STYLE);
+    })
+
+    inputEl.addEventListener("blur", () => {
+        setCaretStyle(CARET_INACTIVE_STYLE);
+    })
+
+    resetForm();
 }

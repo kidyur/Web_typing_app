@@ -13,6 +13,34 @@ body {
     font-size: 32px;
 }
 
-input {
+.text-example {
+    margin: 0;
+    position: fixed;
+    pointer-events: none;
+}
+
+.input-field {
     font-size: 32px;
+    width: 900px;
+    height: 150px;
+    opacity: 0;
+}
+
+.input__caret {
+    /*-8.5px helps to avoid moving of symbols while caret is moving*/
+    margin: 0 -8.5px; 
+}
+
+.input__caret--blinking {
+    animation: blinking 1s infinite;
+}
+
+.input__caret--hidden {
+    opacity: 0%;
+}
+
+@keyframes blinking {
+    0% { opacity: 0%; }
+    50% { opacity: 100%; }
+    100% { opacity: 0%; }
 }
