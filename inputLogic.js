@@ -29,16 +29,21 @@ window.onload = () => {
     let caret = 0;
     let inputLength = 0;
 
-    let inputField = document.getElementsByClassName("input-field")[0];
-    inputField.addEventListener("input", () => {
+    let input = document.getElementsByClassName("input-field")[0];
+    input.addEventListener("input", () => {
         
-        var newText = inputField.value;
+        var newText = input.value;
         var newLength = newText.length;
         var newSymbol = newText.at(-1);
         // BACKSPACE KEY
         if (newLength < inputLength) {
-            paintSymbol(caret-1, "grey");
-            moveCaretTo(LEFT);
+            var changes = inputLength - newLength;
+            // The cycle is way to deal with a CTRL+BACKSPACE case
+            while (changes > 0) {
+                paintSymbol(caret-1, "grey");
+                moveCaretTo(LEFT);
+                changes -= 1;
+            }
             // SYMBOL KEY
         } else if (newLength > inputLength) {
             var color = "red";
@@ -56,7 +61,7 @@ window.onload = () => {
             paintSymbol(caret-1, "grey");
             moveCaretTo(LEFT);
             newLength -= 1;
-            inputField.value = newText.slice(0, -1);
+            input.value = newText.slice(0, -1);
         }
 
         // Updates value of visible text element
