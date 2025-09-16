@@ -4,6 +4,14 @@ const RIGHT = 1;
 
 
 window.onload = () => {
+    const exampleEl = document.getElementsByClassName("text-example")[0];
+    const inputEl = document.getElementsByClassName("input-field")[0];
+
+    let text = "|Пример текста, чтобы тренировать скорость печати";
+    let separated = text.split('');
+    let caret = 0;
+    let inputLength = 0;
+
     function moveCaretTo(side) {
         [separated[caret], separated[caret + side]] = [separated[caret + side], separated[caret]];
         caret += side;
@@ -18,26 +26,21 @@ window.onload = () => {
         separated[symbolInd] = `<span style="color: ${color};">${text[symbolInd + shift]}</span>`;
     }
 
-    let exampleEl = document.getElementsByClassName("text-example")[0];
+    function updateExample() {
+        exampleEl.innerHTML = separated.join('');
+    }
 
+    updateExample()
+
+    inputEl.addEventListener("input", () => {
         
-    let text = "|Пример текста, чтобы тренировать скорость печати";
-    let separated = text.split('')
-
-    exampleEl.textContent = text;
-
-    let caret = 0;
-    let inputLength = 0;
-
-    let input = document.getElementsByClassName("input-field")[0];
-    input.addEventListener("input", () => {
-        
-        var newText = input.value;
+        var newText = inputEl.value;
         var newLength = newText.length;
         var newSymbol = newText.at(-1);
         // BACKSPACE KEY
         if (newLength < inputLength) {
             var changes = inputLength - newLength;
+            inputLength -= changes;
             // The cycle is way to deal with a CTRL+BACKSPACE case
             while (changes > 0) {
                 paintSymbol(caret-1, "grey");
@@ -53,21 +56,19 @@ window.onload = () => {
             }
             paintSymbol(caret+1, color);
             moveCaretTo(RIGHT);
+            inputLength += 1;
         }
 
         // Accepts space only if it is necessary
         // To avoid space pressing error
-        if (newSymbol == ' ' && text[caret] != ' ') {
+        if (newSymbol == ' ' && text[caret] != ' ' || newSymbol != ' ' && text[caret] == ' ') {
             paintSymbol(caret-1, "grey");
             moveCaretTo(LEFT);
-            newLength -= 1;
-            input.value = newText.slice(0, -1);
+            inputLength -= 1;
+            inputEl.value = newText.slice(0, -1);
         }
 
-        // Updates value of visible text element
-        exampleEl.innerHTML = separated.join('');
-
-        inputLength = newLength;
+        updateExample();
     })
 
 }
