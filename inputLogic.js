@@ -61,7 +61,9 @@ window.onload = () => {
 
         // Accepts space only if it is necessary
         // To avoid space pressing error
-        if (newSymbol == ' ' && text[caret] != ' ' || newSymbol != ' ' && text[caret] == ' ') {
+        const IS_KEY_MISSED = (newSymbol == ' ' && text[caret] != ' ');
+        const IS_SPACE_MISSED = (newSymbol != ' ' && text[caret] == ' ');
+        if (IS_KEY_MISSED || IS_SPACE_MISSED) {
             paintSymbol(caret-1, "grey");
             moveCaretTo(LEFT);
             inputLength -= 1;
