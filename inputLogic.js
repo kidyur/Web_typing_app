@@ -32,11 +32,11 @@ window.onload = () => {
     let inputField = document.getElementsByClassName("input-field")[0];
     inputField.addEventListener('input', () => {
         var newInputLength = inputField.value.length;
-        // BACKSPACE
+        // BACKSPACE KEY
         if (newInputLength < inputLength) {
             paintSymbol(caret-1, "grey");
             moveCaretTo(LEFT);
-        // SYMBOL
+        // SYMBOL KEY
         } else if (newInputLength > inputLength) {
             var color = "red";
             // SYMBOLS MATCHED     
