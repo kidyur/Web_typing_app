@@ -30,27 +30,39 @@ window.onload = () => {
     let inputLength = 0;
 
     let inputField = document.getElementsByClassName("input-field")[0];
-    inputField.addEventListener('input', () => {
-        var newInputLength = inputField.value.length;
+    inputField.addEventListener("input", () => {
+        
+        var newText = inputField.value;
+        var newLength = newText.length;
+        var newSymbol = newText.at(-1);
         // BACKSPACE KEY
-        if (newInputLength < inputLength) {
+        if (newLength < inputLength) {
             paintSymbol(caret-1, "grey");
             moveCaretTo(LEFT);
-        // SYMBOL KEY
-        } else if (newInputLength > inputLength) {
+            // SYMBOL KEY
+        } else if (newLength > inputLength) {
             var color = "red";
             // SYMBOLS MATCHED     
-            if (inputField.value[caret] == text[caret+1]) {
+            if (newSymbol == text[caret+1]) {
                 color = "green";
             }
             paintSymbol(caret+1, color);
             moveCaretTo(RIGHT);
         }
 
+        // Accepts space only if it is necessary
+        // To avoid space pressing error
+        if (newSymbol == ' ' && text[caret] != ' ') {
+            paintSymbol(caret-1, "grey");
+            moveCaretTo(LEFT);
+            newLength -= 1;
+            inputField.value = newText.slice(0, -1);
+        }
+
         // Updates value of visible text element
         exampleEl.innerHTML = separated.join('');
 
-        inputLength = newInputLength;
+        inputLength = newLength;
     })
 
 }
