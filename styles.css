@@ -1,5 +1,4 @@
 body {
-    color: grey;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -13,6 +12,51 @@ body {
     font-size: 32px;
 }
 
+header {
+    height: 80px;
+    position: absolute;
+    width: calc(100% - 20px);
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-right: 20px;
+}
+
+.header__btn {
+    height: 40px;
+    aspect-ratio: 1;
+    border-radius: 100%;
+    background-color: aliceblue;
+}
+
+.docs {
+    width: 600px;
+    height: 200px;
+    margin-top: 400px;
+    pointer-events: none;
+    display: flex;
+    font-size: 16px;
+    align-items: start;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.docs__key {
+    background-color: black;
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: white;
+}
+
+.docs__hint {
+    margin-top: 5px;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
 .text-example {
     margin: 0;
     position: fixed;
@@ -20,10 +64,12 @@ body {
 }
 
 .input-field {
-    font-size: 32px;
     width: 900px;
+    color: grey;
     height: 150px;
+    font-size: 32px;
     opacity: 0;
+    position: fixed;
 }
 
 .input__caret {

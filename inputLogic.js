@@ -1,6 +1,9 @@
 
 const LEFT = -1;
 const RIGHT = 1;
+const TEXT_CORRECT_COLOR = "green";
+const TEXT_UNFILLED_COLOR = "black";
+const TEXT_UNCORRECT_COLOR = "red";
 const CARET_ACTIVE_STYLE = "input__caret input__caret--blinking";
 const CARET_INACTIVE_STYLE = "input__caret input__caret--hidden";
 
@@ -22,7 +25,7 @@ window.onload = () => {
     function paintSymbol(symbolInd, color) {
         var shift = 0;
         // Backspace case needs shift in texts symbol matching
-        if (color == "grey") {
+        if (color == TEXT_UNFILLED_COLOR) {
             shift = 1;
         }
         separated[symbolInd] = `<span style="color: ${color};">${text[symbolInd + shift]}</span>`;
@@ -38,8 +41,8 @@ window.onload = () => {
     }
 
     function resetForm() {
-        updateExample();
         setCaretStyle(CARET_INACTIVE_STYLE);
+        updateExample();
     }
 
     inputEl.addEventListener("input", () => {
@@ -56,15 +59,15 @@ window.onload = () => {
             inputLength -= changes;
             // The cycle is way to deal with a CTRL+BACKSPACE case
             while (changes > 0) {
-                paintSymbol(caret-1, "grey");
+                paintSymbol(caret-1, TEXT_UNFILLED_COLOR);
                 moveCaretTo(LEFT);
                 changes -= 1;
             }
         } else if (KEY) {
-            var color = "red";
+            var color = TEXT_UNCORRECT_COLOR;
             // SYMBOLS MATCHED     
             if (newSymbol == text[caret+1]) {
-                color = "green";
+                color = TEXT_CORRECT_COLOR;
             }
             paintSymbol(caret+1, color);
             moveCaretTo(RIGHT);
@@ -75,7 +78,7 @@ window.onload = () => {
         const IS_SPACE_MISSED = (newSymbol != ' ' && text[caret] == ' ');
         
         if (IS_KEY_MISSED || IS_SPACE_MISSED) {
-            paintSymbol(caret-1, "grey");
+            paintSymbol(caret-1, TEXT_UNFILLED_COLOR);
             moveCaretTo(LEFT);
             inputLength -= 1;
             inputEl.value = newText.slice(0, -1);
