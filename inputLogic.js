@@ -11,7 +11,9 @@ const CARET_INACTIVE_STYLE = "input__caret input__caret--hidden";
 window.onload = () => {
     const exampleEl = document.getElementsByClassName("text-example")[0];
     const inputEl = document.getElementsByClassName("input-field")[0];
+    const docsEl = document.getElementsByClassName("docs")[0];
 
+    let isDocsVisible = true;
     let text = "|Пример текста, чтобы тренировать скорость печати";
     let separated = text.split('');
     let caret = 0;
@@ -40,8 +42,23 @@ window.onload = () => {
         updateExample();
     }
 
+    function toogleDocs() {
+        if (isDocsVisible) {
+            docsEl.style.visibility = "hidden";
+        } else {
+            docsEl.style.visibility = "visible";
+        }
+        isDocsVisible = !isDocsVisible;
+    }
+
     function resetForm() {
+        text = "|Пример текста, чтобы тренировать скорость печати";
+        separated = text.split('');
+        caret = 0;
         setCaretStyle(CARET_INACTIVE_STYLE);
+        inputLength = 0;
+        inputEl.value = "";
+        inputEl.blur();
         updateExample();
     }
 
@@ -93,6 +110,22 @@ window.onload = () => {
 
     inputEl.addEventListener("blur", () => {
         setCaretStyle(CARET_INACTIVE_STYLE);
+    })
+
+    // DO: toogleTheme(), toogleDocs()
+
+    document.addEventListener("keydown", function setHotkeys(ev) {
+        if (!ev.altKey) return 0;
+
+        if (ev.code == "KeyR") {
+            resetForm();
+        } else if (ev.code == "KeyS") {
+            inputEl.focus();
+        } else if (ev.code == "KeyT") {
+            toogleTheme();
+        } else if (ev.code == "KeyH") {
+            toogleDocs();
+        }
     })
 
     resetForm();
