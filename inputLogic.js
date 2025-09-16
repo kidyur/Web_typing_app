@@ -6,12 +6,15 @@ const TEXT_UNFILLED_COLOR = "black";
 const TEXT_UNCORRECT_COLOR = "red";
 const CARET_ACTIVE_STYLE = "input__caret input__caret--blinking";
 const CARET_INACTIVE_STYLE = "input__caret input__caret--hidden";
+const DOCS_ACTIVE_STYLE = "header__btn docs-btn--active";
+const DOCS_INACTIVE_STYLE = "header__btn docs-btn--inactive";
 
 
 window.onload = () => {
     const exampleEl = document.getElementsByClassName("text-example")[0];
     const inputEl = document.getElementsByClassName("input-field")[0];
-    const docsEl = document.getElementsByClassName("docs")[0];
+    const docsMenuEl = document.getElementsByClassName("docs")[0];
+    const docsBtnEl = document.getElementsByClassName("docs-btn--active")[0];
 
     let isDocsVisible = true;
     let text = "|Пример текста, чтобы тренировать скорость печати";
@@ -44,9 +47,11 @@ window.onload = () => {
 
     function toogleDocs() {
         if (isDocsVisible) {
-            docsEl.style.visibility = "hidden";
+            docsMenuEl.style.visibility = "hidden";
+            docsBtnEl.className = DOCS_INACTIVE_STYLE;
         } else {
-            docsEl.style.visibility = "visible";
+            docsMenuEl.style.visibility = "visible";
+            docsBtnEl.className = DOCS_ACTIVE_STYLE;
         }
         isDocsVisible = !isDocsVisible;
     }
@@ -102,6 +107,10 @@ window.onload = () => {
         }
 
         updateExample();
+    })
+
+    docsBtnEl.addEventListener("click", () => {
+        toogleDocs();
     })
 
     inputEl.addEventListener("focus", () => {
