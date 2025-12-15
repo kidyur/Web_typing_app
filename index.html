@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="inputLogic.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,7 +11,7 @@
         <button class="header__btn docs-btn--active"></button>
     </header>
     <p class="text-example"></p>
-    <input class="input-field">
+    <input id="input-field" class="input-field">
     <div class="docs">
         <div class="docs__hint">
             <span class="docs__key">Alt</span> + <span class="docs__key">S</span> > Start typing</br>
@@ -27,5 +26,9 @@
             <span class="docs__key hidden">Alt</span> + <span class="docs__key">R</span> > Reset form</br>
         </div>
     </div>
+    <script type="module" src="main.js"></script>
+    <script type="module" src="input.js"></script>
+    <script type="module" src="menu.js"></script>
+    <script type="module" src="themes.js"></script>
 </body>
 </html>
