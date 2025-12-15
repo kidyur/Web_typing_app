@@ -6,17 +6,7 @@ const TEXT_UNFILLED_COLOR = "var(--cur-empty-text-color)";
 const TEXT_UNCORRECT_COLOR = "var(--cur-wrong-text-color)";
 const CARET_ACTIVE_STYLE = "input__caret input__caret--blinking";
 const CARET_INACTIVE_STYLE = "input__caret input__caret--hidden";
-const DOCS_ACTIVE_STYLE = "header__btn docs-btn--active";
-const DOCS_INACTIVE_STYLE = "header__btn docs-btn--inactive";
-const THEME_PROPERTIES = [
-    "bg-color",
-    "empty-text-color",
-    "correct-text-color",
-    "wrong-text-color"
-];
 
-let theme = "light";
-let isDocsVisible = true;
 let text = "|Пример текста, чтобы тренировать скорость печати";
 let separated = text.split('');
 let caret = 0;
@@ -25,9 +15,6 @@ let inputLength = 0;
 window.onload = () => {
     const exampleEl = document.getElementsByClassName("text-example")[0];
     const inputEl = document.getElementsByClassName("input-field")[0];
-    const docsMenuEl = document.getElementsByClassName("docs")[0];
-    const docsBtnEl = document.getElementsByClassName("docs-btn--active")[0];
-
 
     function moveCaretTo(side) {
         [separated[caret], separated[caret + side]] = [separated[caret + side], separated[caret]];
@@ -52,17 +39,6 @@ window.onload = () => {
         updateExample();
     }
 
-    function toogleDocs() {
-        if (isDocsVisible) {
-            docsMenuEl.style.visibility = "hidden";
-            docsBtnEl.className = DOCS_INACTIVE_STYLE;
-        } else {
-            docsMenuEl.style.visibility = "visible";
-            docsBtnEl.className = DOCS_ACTIVE_STYLE;
-        }
-        isDocsVisible = !isDocsVisible;
-    }
-
     function resetForm() {
         text = "|Пример текста, чтобы тренировать скорость печати";
         separated = text.split('');
@@ -72,25 +48,6 @@ window.onload = () => {
         inputEl.value = "";
         inputEl.blur();
         updateExample();
-    }
-
-    function setColors(newTheme) {
-        const root = document.documentElement;
-        const styles = window.getComputedStyle(root);
-        for (property of THEME_PROPERTIES) {
-            let newValue = styles.getPropertyValue(`--${newTheme}-${property}`);
-            root.style.setProperty(`--cur-${property}`, newValue);
-        }
-    }
-
-    function toogleTheme() {
-        if (theme == "light") {
-            setColors("dark");
-            theme = "dark";
-        } else {
-            setColors("light");
-            theme = "light";
-        }
     }
 
     inputEl.addEventListener("input", () => {
@@ -135,9 +92,7 @@ window.onload = () => {
         updateExample();
     })
 
-    docsBtnEl.addEventListener("click", () => {
-        toogleDocs();
-    })
+
 
     inputEl.addEventListener("focus", () => {
         setCaretStyle(CARET_ACTIVE_STYLE);
@@ -145,20 +100,6 @@ window.onload = () => {
 
     inputEl.addEventListener("blur", () => {
         setCaretStyle(CARET_INACTIVE_STYLE);
-    })
-
-    document.addEventListener("keydown", function setHotkeys(ev) {
-        if (!ev.altKey) return 0;
-
-        if (ev.code == "KeyR") {
-            resetForm();
-        } else if (ev.code == "KeyS") {
-            inputEl.focus();
-        } else if (ev.code == "KeyT") {
-            toogleTheme();
-        } else if (ev.code == "KeyH") {
-            toogleDocs();
-        }
     })
 
     resetForm();
