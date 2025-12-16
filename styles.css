@@ -9,8 +9,8 @@
     --dark-correct-text-color: green;
     --dark-wrong-text-color: red;
 
-    --cur-bg-color: black;
-    --cur-empty-text-color: white;
+    --cur-bg-color: rgb(231, 231, 231);
+    --cur-empty-text-color: black;
     --cur-correct-text-color: green;
     --cur-wrong-text-color: red;
 }
@@ -33,7 +33,6 @@ body {
 
 header {
     height: 80px;
-    position: absolute;
     width: calc(100% - 20px);
     top: 0;
     display: flex;
@@ -80,23 +79,16 @@ header {
     margin-top: 5px;
 }
 
-.hidden {
-    visibility: hidden;
-}
-
 .text-example {
-    margin: 0;
-    position: fixed;
-    pointer-events: none;
+    cursor: pointer;
 }
 
 .input-field {
-    width: 900px;
-    color: grey;
-    height: 150px;
-    font-size: 32px;
-    opacity: 0;
-    position: fixed;
+    opacity: 0%;
+    width: 0;
+    height: 0;
+    position: absolute;
+    pointer-events: none;
 }
 
 .input__caret {
@@ -121,7 +113,39 @@ header {
 }
 
 .empty_color { 
-    color: white;
+    color: black;
+}
+
+#clock {
+    border: 3px solid black;
+    width: 20px;
+    aspect-ratio: 1;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: rotating 2s infinite;
+    animation-play-state: paused;
+}
+
+#clock__diameter {
+    height: 100%;
+    padding-top: 10%;
+    box-sizing: border-box;
+    width: 3px;
+}
+
+#clock__arrow {
+    height: 50%;
+    border-radius: 2px;
+    background-color: black;
+}
+
+@keyframes rotating {
+    25% { transform: rotate(90deg) }
+    50% { transform: rotate(180deg) }
+    75% { transform: rotate(270deg) }
+    100% { transform: rotate(360deg) }
 }
 
 @keyframes blinking {

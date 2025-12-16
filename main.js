@@ -1,8 +1,29 @@
-let TEXT_CORRECT_COLOR = "var(--cur-correct-text-color)";
-let TEXT_UNFILLED_COLOR = "var(--cur-empty-text-color)";
-let TEXT_UNCORRECT_COLOR = "var(--cur-wrong-text-color)";
-let CARET_ACTIVE_STYLE = "input__caret input__caret--blinking";
-let CARET_INACTIVE_STYLE = "input__caret input__caret--hidden";
+
+class Timer {
+    static #instance;
+
+    startMoment;
+    time;
+    clockEl = document.getElementById('clock');
+
+    constructor() {
+        if (Timer.#instance) {
+            return Timer.#instance;
+        }
+        Timer.#instance = this;
+        return this;
+    }
+
+    start() {
+        this.startMoment = performance.now();
+        this.clockEl.style.animationPlayState = 'running';
+    }
+
+    stop() {
+        this.time = performance.now() - this.startMoment;
+        this.clockEl.style.animationPlayState = 'paused';
+    }
+}
 
 // INPUT -- BEGINNING
 class InputField {
@@ -19,9 +40,10 @@ class InputField {
         if (InputField.#instance) {
             return InputField.#instance;
         }
-        this.inputEl.addEventListener("input", () => this.handleInput());
-        this.inputEl.addEventListener("focus", () => this.setCaretStyle(CARET_ACTIVE_STYLE));
-        this.inputEl.addEventListener("blur",  () => this.setCaretStyle(CARET_INACTIVE_STYLE));
+        this.exampleEl.addEventListener('click', () => this.inputEl.focus());
+        this.inputEl.addEventListener("input",   () => this.handleInput());
+        this.inputEl.addEventListener("focus",   () => { this.symbols[this.caret].className = "input__caret input__caret--blinking" });
+        this.inputEl.addEventListener("blur",    () => { this.symbols[this.caret].className = "input__caret input__caret--hidden" });
         this.resetForm();
         InputField.#instance = this;
         return this;
@@ -41,33 +63,23 @@ class InputField {
         this.caret += side;
     }
     
-    paintSymbol(symbolInd, color) {
-        this.symbols[symbolInd].className = color;
-    }
-    
-    setCaretStyle(styles) {
-        this.symbols[this.caret].className = styles;
-    }
-    
     resetForm() {
-        this.text = "|Пример текста, чтобы тренировать скорость печати";
-
+        this.text = "|Losto Caradhras, sedho, hodo, nuitho i 'ruith!";
         let textHTML = "";
         for (const c of this.text) {
             textHTML += "<span>" + c + "</span>";
         }
         this.exampleEl.innerHTML = textHTML;
         this.symbols = this.exampleEl.querySelectorAll('span');
-
         this.caret = 0;
-        this.setCaretStyle(CARET_INACTIVE_STYLE);
+        this.symbols[this.caret].className = "input__caret input__caret--hidden";
         this.inputLength = 0;
         this.inputEl.value = "";
         this.inputEl.blur();
     }
 
     handleInput() {
-        console.time('handleInput()')
+        console.time('handleInput()');
 
         let diff = this.inputEl.value.length - this.inputLength;
         // Preventing key holding
@@ -86,7 +98,7 @@ class InputField {
             } else if (this.inputEl.value.at(-1) == this.text[this.caret + gap]) {
                 color = "match_color";
             } 
-            this.paintSymbol(this.caret + gap, color); 
+            this.symbols[this.caret + gap].className = color;
             this.moveCaret(gap);
             diff -= gap;
         }
@@ -95,76 +107,7 @@ class InputField {
 }
 // INPUT -- END
 
-// DOCS -- BEGINNING
-const DOCS_ACTIVE_STYLE = "header__btn docs-btn--active";
-const DOCS_INACTIVE_STYLE = "header__btn docs-btn--inactive";
-
-let isDocsVisible = true;
-
-const docsMenuEl = document.getElementsByClassName("docs")[0];
-const docsBtnEl = document.getElementsByClassName("docs-btn--active")[0];
-
-function toogleDocs() {
-    if (isDocsVisible) {
-        docsMenuEl.style.visibility = "hidden";
-        docsBtnEl.className = DOCS_INACTIVE_STYLE;
-    } else {
-        docsMenuEl.style.visibility = "visible";
-        docsBtnEl.className = DOCS_ACTIVE_STYLE;
-    }
-    isDocsVisible = !isDocsVisible;
-}
-
-document.addEventListener("keydown", function setHotkeys(ev) {
-    if (!ev.altKey) return 0;
-
-    if (ev.code == "KeyR") {
-        resetForm();
-    } else if (ev.code == "KeyS") {
-        inputEl.focus();
-    } else if (ev.code == "KeyT") {
-        toogleTheme();
-    } else if (ev.code == "KeyH") {
-        toogleDocs();
-    }
-})
-
-docsBtnEl.addEventListener("click", () => {
-    toogleDocs();
-})
-// DOCS -- END
-
-// THEMES -- BEGINNING
-const THEME_PROPERTIES = [
-    "bg-color",
-    "empty-text-color",
-    "correct-text-color",
-    "wrong-text-color"
-];
-
-let theme = "light";
-
-function toogleTheme() {
-    if (theme == "light") {
-        setColors("dark");
-        theme = "dark";
-    } else {
-        setColors("light");
-        theme = "light";
-    }
-}
-
-function setColors(newTheme) {
-    const root = document.documentElement;
-    const styles = window.getComputedStyle(root);
-    for (property of THEME_PROPERTIES) {
-        let newValue = styles.getPropertyValue(`--${newTheme}-${property}`);
-        root.style.setProperty(`--cur-${property}`, newValue);
-    }
-}
-// THEMES -- END 
-
-
 window.addEventListener('DOMContentLoaded', () => {
     const input = new InputField();
+    const timer = new Timer();
 })
