@@ -1,16 +1,16 @@
-TEXT_CORRECT_COLOR = "var(--cur-correct-text-color)";
-TEXT_UNFILLED_COLOR = "var(--cur-empty-text-color)";
-TEXT_UNCORRECT_COLOR = "var(--cur-wrong-text-color)";
-CARET_ACTIVE_STYLE = "input__caret input__caret--blinking";
-CARET_INACTIVE_STYLE = "input__caret input__caret--hidden";
+let TEXT_CORRECT_COLOR = "var(--cur-correct-text-color)";
+let TEXT_UNFILLED_COLOR = "var(--cur-empty-text-color)";
+let TEXT_UNCORRECT_COLOR = "var(--cur-wrong-text-color)";
+let CARET_ACTIVE_STYLE = "input__caret input__caret--blinking";
+let CARET_INACTIVE_STYLE = "input__caret input__caret--hidden";
 
 // INPUT -- BEGINNING
 class InputField {
     text = "";
-    separated = [];
     caret = 0;
     inputLength = 0;
     exampleEl = document.getElementsByClassName("text-example")[0];
+    symbols = [];
     inputEl = document.getElementById("input-field");
     
     static #instance;
@@ -28,63 +28,69 @@ class InputField {
     }
 
     moveCaret(side) {
-        const tmp = this.separated[this.caret];
-        this.separated[this.caret] = this.separated[this.caret + side];
-        this.separated[this.caret + side] = tmp;        
+        const nextSymbol = this.symbols[this.caret+side].textContent;
+        const nextSymbolStyle = this.symbols[this.caret+side].className;
+        const caretStyles = this.symbols[this.caret].className;
+
+        this.symbols[this.caret+side].textContent = "|";
+        this.symbols[this.caret+side].className = caretStyles;
+
+        this.symbols[this.caret].textContent = nextSymbol;
+        this.symbols[this.caret].className = nextSymbolStyle;
+
         this.caret += side;
     }
     
     paintSymbol(symbolInd, color) {
-        var shift = 0;
-        // Backspace case needs shift in texts symbol matching
-        if (color == TEXT_UNFILLED_COLOR) {
-            shift = 1;
-        }
-        this.separated[symbolInd] = `<span style="color: ${color};">${this.text[symbolInd + shift]}</span>`;
-    }
-    
-    updateExample() {
-        this.exampleEl.innerHTML = this.separated.join('');
+        this.symbols[symbolInd].className = color;
     }
     
     setCaretStyle(styles) {
-        this.separated[this.caret] = `<span class="${styles}">|</span>`;
-        this.updateExample();
+        this.symbols[this.caret].className = styles;
     }
     
     resetForm() {
         this.text = "|Пример текста, чтобы тренировать скорость печати";
-        this.separated = this.text.split('');
+
+        let textHTML = "";
+        for (const c of this.text) {
+            textHTML += "<span>" + c + "</span>";
+        }
+        this.exampleEl.innerHTML = textHTML;
+        this.symbols = this.exampleEl.querySelectorAll('span');
+
         this.caret = 0;
         this.setCaretStyle(CARET_INACTIVE_STYLE);
         this.inputLength = 0;
         this.inputEl.value = "";
         this.inputEl.blur();
-        this.updateExample();
     }
 
     handleInput() {
+        console.time('handleInput()')
+
         let diff = this.inputEl.value.length - this.inputLength;
         // Preventing key holding
         if (diff == 1 && this.text[this.caret+diff] == ' ' && this.inputEl.value.at(-1) != ' ') {
             this.inputEl.value = this.inputEl.value.slice(0, -1);
+            console.timeEnd('handleInput()')
             return;
         }
         const gap = 1 * diff / Math.abs(diff);
         this.inputLength += diff;
         // The cycle is way to deal with a CTRL+BACKSPACE case
         while (diff != 0) {
-            let color = TEXT_UNCORRECT_COLOR;
+            let color = "miss_color";
             if (gap == -1) {
-                color = TEXT_UNFILLED_COLOR;
+                color = "empty_color";
             } else if (this.inputEl.value.at(-1) == this.text[this.caret + gap]) {
-                color = TEXT_CORRECT_COLOR;
+                color = "match_color";
             } 
             this.paintSymbol(this.caret + gap, color); 
             this.moveCaret(gap);
             diff -= gap;
         }
-        this.updateExample();
+        console.timeEnd('handleInput()')
     }
 }
 // INPUT -- END
